@@ -1,0 +1,7 @@
+0 antracnosis
+1 frutos_verdes
+2 hojas_enfermas
+3 hojas_sanas
+4 mancha_bacteriana
+5 mildiu
+6 otros

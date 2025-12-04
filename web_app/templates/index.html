@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detección de Enfermedades en Plantas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Cinzel:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/splash.css') }}"
+    />
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  </head>
+  <body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+      <div class="splash-content">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="PlantIA Logo" class="splash-logo">
+        </div>
+        <h1 class="splash-title">PLANT DOCTOR</h1>
+        <p class="splash-subtitle">DISEASE DETECTION AI</p>
+        
+        <div class="loader-container">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p class="scanning-text">SCANNING...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="background-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <main class="container">
+      <header class="header">
+        <h1><i class="fa-solid fa-leaf"></i> PlantIA Doctor</h1>
+        <p>Detección inteligente de enfermedades en plantas</p>
+      </header>
+
+      <div class="glass-panel">
+        <div class="camera-section">
+          <div class="video-container" id="videoContainer">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none"></canvas>
+            <div class="scan-overlay"></div>
+            <div id="placeholder-icon" class="placeholder-icon">
+              <i class="fa-solid fa-camera"></i>
+              <p>Inicia la cámara o sube una foto</p>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button id="startCameraBtn" class="btn btn-primary">
+              <i class="fa-solid fa-video"></i> Iniciar Cámara
+            </button>
+            <button id="stopCameraBtn" class="btn btn-danger" style="display: none;">
+              <i class="fa-solid fa-video-slash"></i> Detener
+            </button>
+            <button id="captureBtn" class="btn btn-action" disabled>
+              <i class="fa-solid fa-camera-retro"></i> Capturar
+            </button>
+            <div class="file-input-wrapper">
+              <button class="btn btn-secondary" id="uploadBtn">
+                <i class="fa-solid fa-upload"></i> Subir Imagen
+              </button>
+              <input type="file" id="fileInput" accept="image/*" />
+              <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" />
+            </div>
+            
+            <!-- Botón especial para móviles (se muestra vía JS) -->
+            <button id="mobileScanBtn" class="btn btn-primary" style="display: none; width: 100%; padding: 20px; font-size: 1.2rem; margin-top: 10px;">
+              <i class="fa-solid fa-camera"></i> Escanear Planta
+            </button>
+          </div>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+          <div
+            class="loading-spinner"
+            id="loadingSpinner"
+            style="display: none"
+          >
+            <div class="spinner"></div>
+            <p>Analizando...</p>
+          </div>
+
+          <div id="resultContent" style="display: none">
+            <h2>Resultado del Análisis</h2>
+            <div class="prediction-card">
+              <div class="prediction-icon" id="predictionIcon">
+                <i class="fa-solid fa-check-circle"></i>
+              </div>
+              <div class="prediction-info">
+                <h3 id="labelResult">--</h3>
+                <div class="confidence-bar-wrapper">
+                  <div
+                    class="confidence-bar"
+                    id="confidenceBar"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <p class="confidence-text">
+                  Confianza: <span id="confidenceResult">0%</span>
+                </p>
+              </div>
+            </div>
+            <button id="resetBtn" class="btn btn-secondary" style="width: 100%; margin-top: 15px;">
+                <i class="fa-solid fa-rotate-right"></i> Nueva Consulta
+            </button>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div id="debug-log" style="color: red; margin-top: 20px; font-family: monospace; white-space: pre-wrap; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 5px; display: none;"></div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
