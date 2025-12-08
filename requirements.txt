@@ -1,7 +1,5 @@
-tensorflow
-pandas
-numpy
-opencv-python
-scipy
 flask
+tensorflow-cpu
+numpy
 pillow
+gunicorn
