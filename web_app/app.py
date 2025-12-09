@@ -10,7 +10,6 @@ import tensorflow as tf
 import gc
 
 app = Flask(__name__)
-# Trigger reload for label update
 
 # Rutas a los archivos (ajustar según la estructura de carpetas)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +53,7 @@ def predict():
         image = image.resize((224, 224))
         img_array = img_to_array(image)
         
-        # Expandir dimensiones para que coincida con el input del modelo (1, 224, 224, 3)
+        # Expandir dimensiones
         img_array = np.expand_dims(img_array, axis=0)
         
         # Preprocesamiento específico de MobileNetV2
@@ -62,15 +61,34 @@ def predict():
         
         # Realizar predicción
         predictions = model.predict(img_array)
-        score = tf.nn.softmax(predictions[0]) # Si el modelo no tiene softmax al final, pero el tuyo si tiene.
-        # Tu modelo tiene softmax al final: predictions = Dense(len(labels), activation='softmax')(x)
-        # Entonces predictions[0] ya son probabilidades.
         
         predicted_class_index = np.argmax(predictions[0])
         confidence = float(predictions[0][predicted_class_index])
         
         # Umbral de confianza (70%)
         if confidence < 0.70:
+            predicted_label = "No identificado / Fondo (Baja confianza)"
+        else:
+            predicted_label = labels.get(predicted_class_index, "Desconocido")
+            if predicted_label == "otros":
+                predicted_label = "No es una planta / Error"
+        
+        # Limpiar memoria
+        del img_array, image
+        gc.collect()
+
+        return jsonify({
+            'label': predicted_label,
+            'confidence': f"{confidence * 100:.2f}%",
+            'all_predictions': {labels[i]: float(prob) for i, prob in enumerate(predictions[0])}
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    import socket
+    def get_ip():
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             # doesn't even have to be reachable
