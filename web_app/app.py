@@ -7,6 +7,7 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import io
 import tensorflow as tf
+import gc
 
 app = Flask(__name__)
 # Trigger reload for label update
@@ -70,24 +71,6 @@ def predict():
         
         # Umbral de confianza (70%)
         if confidence < 0.70:
-            predicted_label = "No identificado / Fondo (Baja confianza)"
-        else:
-            predicted_label = labels.get(predicted_class_index, "Desconocido")
-            if predicted_label == "otros":
-                predicted_label = "No es una planta / Error"
-        
-        return jsonify({
-            'label': predicted_label,
-            'confidence': f"{confidence * 100:.2f}%",
-            'all_predictions': {labels[i]: float(prob) for i, prob in enumerate(predictions[0])}
-        })
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-if __name__ == '__main__':
-    import socket
-    def get_ip():
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             # doesn't even have to be reachable
