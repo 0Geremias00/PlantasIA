@@ -238,9 +238,9 @@ class _HomeScreenState extends State<HomeScreen> {
         await http.MultipartFile.fromPath('image', _image!.path),
       );
 
-      // Timeout para no dejar esperando eternamente
+      // Timeout aumentado para servidores gratuitos (Cold Start)
       final streamedResponse = await request.send().timeout(
-        const Duration(seconds: 15),
+        const Duration(seconds: 90),
       );
       final response = await http.Response.fromStream(streamedResponse);
 
